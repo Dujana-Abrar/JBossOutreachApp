@@ -1,0 +1,132 @@
+package com.example.pc.jbossoutreachapp;
+
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public class repositories extends AppCompatActivity {
+
+
+    private String TAG = MainActivity.class.getSimpleName();
+
+    private ProgressDialog ProgDialog;
+    private ListView listview;
+
+    private static String url = "https://api.github.com/orgs/JBossOutreach/repos";
+
+    ArrayList<HashMap<String,String>> RepoDetails;
+
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.repositories);
+
+        RepoDetails = new ArrayList<>();
+
+        listview = (ListView) findViewById(R.id.list);
+
+        new GetContacts().execute();
+    }
+
+
+    private class GetContacts extends AsyncTask<Void, Void, Void>
+    {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            ProgDialog = new ProgressDialog(repositories.this);
+            ProgDialog.setMessage("Please wait...");
+            ProgDialog.setCancelable(false);
+            ProgDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            HttpHandler sh = new HttpHandler();
+
+            String Json_String = sh.makeServiceCall(url);
+
+            Log.e(TAG, "Response from url: " + Json_String);
+
+            if(Json_String != null)
+            {
+                try
+                {
+                  JSONArray array = new JSONArray();
+                    for(int i = 0; i < array.length(); i++)
+                    {
+                        JSONObject ob = array.getJSONObject(i);
+
+                        String name = ob.getString("name");
+
+                        HashMap<String, String> contact = new HashMap<>();
+
+                        contact.put("name", name);
+
+                        RepoDetails.add(contact);
+                    }
+                }
+                catch(final JSONException e)
+                {
+                    Log.e(TAG, "Json parsing error: " + e.getMessage());
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(),
+                                    "Json Parsing error: " + e.getMessage(), Toast.LENGTH_LONG).show();                        }
+                    });
+                }
+            }
+
+            else
+            {
+                Log.e(TAG, "Couldn't get Json from server");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(),
+                                "Couldn't get json from server ", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if(ProgDialog.isShowing())
+            {
+                ProgDialog.dismiss();
+            }
+
+            ListAdapter adapter = new SimpleAdapter(
+                    repositories.this, RepoDetails, R.layout.listview_items, new String[]
+                    {"name"}, new int[]{R.id.RepositoryName});
+
+            listview.setAdapter(adapter);
+        }
+
+    }
+
+}
