@@ -12,6 +12,7 @@
         android:layout_width="114dp"
         android:layout_height="48dp"
         android:background="#f0e68c"
+        android:onClick="getStarted"
         android:text="@string/Button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
