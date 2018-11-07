@@ -1,7 +1,6 @@
 package com.example.pc.jbossoutreachapp;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,11 +10,9 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -71,7 +68,7 @@ public class repositories extends AppCompatActivity {
             {
                 try
                 {
-                  JSONArray array = new JSONArray();
+                  JSONArray array = new JSONArray(Json_String);
                     for(int i = 0; i < array.length(); i++)
                     {
                         JSONObject ob = array.getJSONObject(i);
