@@ -36,7 +36,7 @@ public class repositories extends AppCompatActivity {
 
         RepoDetails = new ArrayList<>();
 
-        listview = (ListView) findViewById(R.id.list);
+        listview = (ListView)findViewById(R.id.list);
 
         new GetContacts().execute();
     }
@@ -75,9 +75,13 @@ public class repositories extends AppCompatActivity {
 
                         String name = ob.getString("name");
 
+                        JSONObject owner = ob.getJSONObject("owner");
+                        String link = owner.getString("html_url");
+
                         HashMap<String, String> contact = new HashMap<>();
 
                         contact.put("name", name);
+                        contact.put("link", link+"/"+name);
 
                         RepoDetails.add(contact);
                     }
@@ -119,7 +123,7 @@ public class repositories extends AppCompatActivity {
 
             ListAdapter adapter = new SimpleAdapter(
                     repositories.this, RepoDetails, R.layout.listview_items, new String[]
-                    {"name"}, new int[]{R.id.RepositoryName});
+                    {"name", "link"}, new int[]{R.id.RepositoryName, R.id.Repolink});
 
             listview.setAdapter(adapter);
         }
