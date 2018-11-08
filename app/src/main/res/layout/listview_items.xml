@@ -20,11 +20,5 @@
         android:paddingBottom="2dp"
         android:textColor="@color/colorAccent" />
 
-    <TextView
-        android:id="@+id/Repolink"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="2dp"
-        android:textColor="@color/colorAccent"/>
 
     </LinearLayout>
