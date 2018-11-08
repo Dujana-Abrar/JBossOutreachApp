@@ -1,14 +1,18 @@
 package com.example.pc.jbossoutreachapp;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,7 +21,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class repositories extends AppCompatActivity {
-
 
     private String TAG = MainActivity.class.getSimpleName();
 
@@ -29,6 +32,16 @@ public class repositories extends AppCompatActivity {
     ArrayList<HashMap<String,String>> RepoDetails;
 
 
+    public void link(View view)
+    {
+        TextView text = findViewById(R.id.Repolink);
+        String url = text.getText().toString();
+
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        startActivity(browserIntent);
+
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +49,7 @@ public class repositories extends AppCompatActivity {
 
         RepoDetails = new ArrayList<>();
 
-        listview = (ListView) findViewById(R.id.list);
+        listview = (ListView)findViewById(R.id.list);
 
         new GetContacts().execute();
     }
@@ -75,9 +88,13 @@ public class repositories extends AppCompatActivity {
 
                         String name = ob.getString("name");
 
+                        JSONObject owner = ob.getJSONObject("owner");
+                        String link = owner.getString("html_url");
+
                         HashMap<String, String> contact = new HashMap<>();
 
                         contact.put("name", name);
+                        contact.put("link", link+"/"+name);
 
                         RepoDetails.add(contact);
                     }
@@ -119,7 +136,7 @@ public class repositories extends AppCompatActivity {
 
             ListAdapter adapter = new SimpleAdapter(
                     repositories.this, RepoDetails, R.layout.listview_items, new String[]
-                    {"name"}, new int[]{R.id.RepositoryName});
+                    {"name", "link"}, new int[]{R.id.RepositoryName, R.id.Repolink});
 
             listview.setAdapter(adapter);
         }

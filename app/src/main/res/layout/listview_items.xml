@@ -10,6 +10,14 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="2dp"
-        android:textColor="@color/colorAccent"/>
+        android:textColor="@color/NameRepo" />
+
+    <TextView
+        android:id="@+id/Repolink"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="link"
+        android:paddingBottom="2dp"
+        android:textColor="@color/colorAccent" />
 
     </LinearLayout>
